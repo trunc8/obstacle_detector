@@ -42,7 +42,7 @@ ObstacleDetector::ObstacleDetector() : nh_(""), nh_local_("~") {
   updateParams();
 
   if (p_use_scan_)
-    scan_sub_ = nh_.subscribe("scan", 10, &ObstacleDetector::scanCallback, this);
+    scan_sub_ = nh_.subscribe("filtered_scan", 10, &ObstacleDetector::scanCallback, this);
   else if (p_use_pcl_)
     pcl_sub_ = nh_.subscribe("pcl", 10, &ObstacleDetector::pclCallback, this);
 
@@ -53,8 +53,8 @@ ObstacleDetector::ObstacleDetector() : nh_(""), nh_local_("~") {
 }
 
 void ObstacleDetector::updateParams() {
-  nh_local_.param<std::string>("world_frame", p_world_frame_, "world");
-  nh_local_.param<std::string>("scanner_frame", p_scanner_frame_, "scanner");
+  nh_local_.param<std::string>("", p_world_frame_, "map");
+  nh_local_.param<std::string>("", p_scanner_frame_, "ego_racecar/laser");
 
   nh_local_.param<bool>("use_scan", p_use_scan_, true);
   nh_local_.param<bool>("use_pcl", p_use_pcl_, false);
@@ -71,7 +71,7 @@ void ObstacleDetector::updateParams() {
   nh_local_.param<double>("max_circle_radius", p_max_circle_radius_, 0.300);
   nh_local_.param<double>("radius_enlargement", p_radius_enlargement_, 0.050);
 
-  nh_local_.param<double>("max_scanner_range", p_max_scanner_range_, 5.0);
+  nh_local_.param<double>("max_scanner_range", p_max_scanner_range_, 25.0);
   nh_local_.param<double>("max_x_range", p_max_x_range_, 2.0);
   nh_local_.param<double>("min_x_range", p_min_x_range_, -2.0);
   nh_local_.param<double>("max_y_range", p_max_y_range_, 2.0);
